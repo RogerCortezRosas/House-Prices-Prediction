@@ -5,14 +5,21 @@ services:
     image: apache/airflow:2.7.2
     restart: unless-stopped
     environment:
+
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=mysql+mysqldb://house:house@mysql:3306/house
+
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=mysql+mysqldb://airflow:airflow@mysql:3306/airflow
+
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - AIRFLOW__WEBSERVER__WEB_SERVER_PORT=8080
        # Configuraciones adicionales para Java y Spark
  
     ports:
+
       - "8081:8080"
+
+
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
@@ -39,6 +46,7 @@ services:
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=root
+
       - MYSQL_USER=house
       - MYSQL_PASSWORD=house
       - MYSQL_DATABASE=house
@@ -50,6 +58,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
+
       - "3308:3306"
 
 volumes:
