@@ -5,6 +5,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
 from sklearn.model_selection import KFold
+from sklearn.preprocessing import OrdinalEncoder
 import numpy as np
 
 class Transform_Python(BaseOperator):
@@ -44,9 +45,15 @@ class Transform_Python(BaseOperator):
         Drop_columns.extend(self.columnas_nulos(df))
 
         #Drop the columns
+        df.drop(columns=Drop_columns, inplace=True)
         
-        #C reate a new df eith onlu numeric columns
+        #Create a new df eith onlu numeric columns
         df_numeric = df.select_dtypes(include=['int64', 'float64'])
+
+        #Get the categorical columns tha are have encoded
+        df_categorical = self.encoding(df)
+
+
 
 
 
@@ -71,6 +78,42 @@ class Transform_Python(BaseOperator):
     
     def encoding(self,df):
         """This method is used to encode the categorical columns"""
+
+
+        #Function to apply K-Fold target Encoding to a categorical column
+        def kfold_target_encoding (df,column , target,kf):
+            encoded_column = np.zeros(len(df))
+
+            for train_idx , val_idx in kf.split(df):
+                train_data , val_data = df.iloc[train_idx],df.iloc[val_idx]
+
+
+                #Calcula la media de la variable objetivo por categoria en el conjunto de entrenamiento
+
+                target_means = train_data.groupby(column)[target].mean()
+
+                # Asignar la media al conjunto de validación
+                encoded_column[val_idx] = val_data[column].map(target_means)
+            
+            return encoded_column
+        
+        #Function to apply Ordinal Encoding 
+
+        def ordinal_encoding(df):
+
+            #list of coliumns to encode
+            lista_OrEncoding = ["LotShape", "LandSlope", "ExterQual", "ExterCond", "BsmtQual", "BsmtCond", "BsmtExposure", "BsmtFinType1", "BsmtFinType2", "HeatingQC", "KitchenQual", "GarageFinish", "GarageQual", "GarageCond", ]
+
+            #Create an instance of OrdinalEncoder
+            encoder = OrdinalEncoder()
+
+            #Make a copy with the columns to encode
+            df_encoded = df[lista_OrEncoding].copy()
+
+            #Apply Ordinal Encoding to the categorical columns
+            df_encoded[lista_OrEncoding] = encoder.fit_transform(df_encoded[lista_OrEncoding]) 
+
+            return df_encoded
 
         #Get the categorical columns
         categorical_columns = df.select_dtypes(include=['object']).columns
@@ -102,28 +145,24 @@ class Transform_Python(BaseOperator):
 
         df_encoded.columns = [col.replace('_encoded', '') for col in df_encoded.columns]
 
+        #Get the columns that were encodeed
+        df_Ordinal_encoded =  ordinal_encoding(categorical_columns)
+
+        #Cancat df_encoded and df_Ordinal_encoded
+
+        df_Categorical = pd.concat([df_encoded, df_Ordinal_encoded], axis=1)
+
+        return df_Categorical
 
 
 
 
 
 
-        #Function to apply K-Fold target Encoding to a categorical column
-        def kfold_target_encoding (df,column , target,kf):
-            encoded_column = np.zeros(len(df))
 
-            for train_idx , val_idx in kf.split(df):
-                train_data , val_data = df.iloc[train_idx],df.iloc[val_idx]
+        
 
 
-                #Calcula la media de la variable objetivo por categoria en el conjunto de entrenamiento
-
-                target_means = train_data.groupby(column)[target].mean()
-
-                # Asignar la media al conjunto de validación
-                encoded_column[val_idx] = val_data[column].map(target_means)
-            
-            return encoded_column
 
 
 
