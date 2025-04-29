@@ -31,6 +31,33 @@ class Transform_Python(BaseOperator):
 
         return engine
     
+    def load(self, df):
+        """This method is used to load the data into the db"""
+        engine = self.connection()
+        
+        try:
+            #Load the data into the db
+            df.to_sql('house_WareHouse', con=engine, if_exists='append', index=False)
+            self.log.info("Data loaded successfully")
+            #close connection
+            engine.dispose()
+        except Exception as e:
+            self.log.error(f"Error loading data: {e}")
+            raise
+
+    def drop(self):
+        """This method is used to drop the table in the db"""
+        engine = self.connection()
+        
+        try:
+            #Drop the table in the db
+            with engine.connect() as conn:
+                conn.execute("DELETE FROM  house_DataLake")
+                self.log.info("Table dropped successfully")
+        except Exception as e:
+            self.log.error(f"Error dropping table: {e}")
+            raise
+    
     def ETL(self):
          
         """This method is used to transform the data from the db and the save in a datawarehouse"""
@@ -52,6 +79,16 @@ class Transform_Python(BaseOperator):
 
         #Get the categorical columns tha are have encoded
         df_categorical = self.encoding(df)
+
+        #Union the numeric and categorical columns
+        df_transformed = pd.concat([df_numeric, df_categorical], axis=1)
+
+        #Delte data from the db datalake
+        self.drop()
+
+        #Load the data into the db datawarehouse
+
+        self.load(df_transformed)
 
 
 
@@ -148,7 +185,7 @@ class Transform_Python(BaseOperator):
         #Get the columns that were encodeed
         df_Ordinal_encoded =  ordinal_encoding(categorical_columns)
 
-        #Cancat df_encoded and df_Ordinal_encoded
+        #Concat df_encoded and df_Ordinal_encoded
 
         df_Categorical = pd.concat([df_encoded, df_Ordinal_encoded], axis=1)
 
