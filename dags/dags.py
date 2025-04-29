@@ -18,7 +18,7 @@ with DAG( dag_id = 'House_prices_ETL',description = 'DAG tht make etl' , schedul
                                 sql = 'SELECT COUNT(*) FROM house_prices WHERE created_at > NOW() - INTERVAL 1 DAY', #Secciona los registros que fueron creados o actualizados en las últimas 24 horas.
                                 mode = 'reschedule', timeout = 600, poke_interval = 60, soft_fail = False, trigger_rule = TriggerRule.ALL_SUCCESS)
     
-    #Task 3 : Transform data with PySpark
-    transform_data = BashOperator( task_id = 'transform_data', bash_command = "sleep 5 && echo 'Transforming data with PySpark'")
+    #Task 3 : Transform data with Python
+    transform_data_Python = BashOperator( task_id = 'transform_data', bash_command = "sleep 5 && echo 'Transforming data with PySpark'")
 
-    satrt_message >> check_new_data >> transform_data
+    satrt_message >> check_new_data >> transform_data_Python
