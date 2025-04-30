@@ -90,13 +90,15 @@ class Transform_Python(BaseOperator):
 
         self.load(df_transformed)
 
+        print("Data transformed and loaded successfully")
+
 
 
 
 
 
     #Get the columns that have more than 80% of ZEROS
-    def columnas_ceros(dataframe):
+    def columnas_ceros(self,dataframe):
 
         train_columns = dataframe.columns
 
@@ -105,7 +107,7 @@ class Transform_Python(BaseOperator):
         return columnas
     
     #Get the columns that have more than 80% of NULLS
-    def columnas_nulos(dataframe):
+    def columnas_nulos(self,dataframe):
 
         train_columns = dataframe.columns
 
@@ -153,10 +155,10 @@ class Transform_Python(BaseOperator):
             return df_encoded
 
         #Get the categorical columns
-        categorical_columns = df.select_dtypes(include=['object']).columns
+        categorical_columns = df.select_dtypes(include=['object'])
 
         #Agregate 'SalesPrice' column to the categorical columns
-        categorical_columns['SalesPrice'] = df['SalesPrice']
+        categorical_columns['SalesPrice'] = df['SalePrice']
         
         #List of columns that will use K-fold Target Encoding
         lista_tarEncoding = ["MSZoning", "Utilities", "Neighborhood", "Condition1", "Condition2", "BldgType", "HouseStyle", "RoofStyle", "RoofMatl", "Exterior1st", "Exterior2nd",  "Foundation", "BsmtFinType1", "Heating", "Electrical", "Functional", "GarageType", "SaleType", "SaleCondition"]
