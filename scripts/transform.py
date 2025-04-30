@@ -58,14 +58,14 @@ class Transform_Python(BaseOperator):
             self.log.error(f"Error dropping table: {e}")
             raise
     
-    def ETL(self):
+    def execute(self,context):
          
         """This method is used to transform the data from the db and the save in a datawarehouse"""
 
         engine = self.connection() 
 
         inspector = inspect(engine)
-        df = pd.reead_sql_table('house_DataLake', con=engine)
+        df = pd.read_sql_table('house_DataLake', con=engine)
         
         #Get inecesay columns that have more than 80% of ZEROS or NULLS
         Drop_columns = self.columnas_ceros(df)
