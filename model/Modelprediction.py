@@ -19,8 +19,14 @@ class model():
         # Transform tht data using Transform function
         df_transformed = self.Transform()
 
-        #Make a prediction
-        prediction = model.predict(df_transformed)
+        df_transformed.fillna(0, inplace=True)
+
+        try:
+            #Make a prediction
+            prediction = model.predict(df_transformed)
+        except Exception as e:
+           
+            raise Exception(f"Error making prediction: {e}")
 
         result  = int(prediction[0])
 
@@ -31,6 +37,13 @@ class model():
 
         #fill the missing values with zero
         self.df.fillna(0, inplace=True)
+
+        #filter the columns that are not needed for the prediction
+        engine = self.connection()
+        df_WH = pd.read_sql_table('house_WareHouse', engine)
+        columns_to_drop = self.df.columns.difference(df_WH.columns) #Get the columns that are not in the DataWarehouse
+        self.df.drop(columns=columns_to_drop, inplace=True)
+
 
         #Separate numerical columns
         df_numeric = self.df.select_dtypes(include=['int64', 'float64'])
@@ -68,7 +81,7 @@ class model():
 
             lista_tarEncoding = ["MSZoning", "Utilities", "Neighborhood", "Condition1", "Condition2", "BldgType", "HouseStyle", "RoofStyle", "RoofMatl", "Exterior1st", "Exterior2nd",  "Foundation", "BsmtFinType1", "Heating", "Electrical", "Functional", "GarageType", "SaleType", "SaleCondition"]
 
-            df_new = df_to_Predict.copy()
+            df_new = df_to_Predict[lista_tarEncoding].copy()
             for columna in lista_tarEncoding:
                 # Usar el mapeo calculado en el conjunto de entrenamiento
                 category_means = df_WH.groupby(columna)['SalePrice'].mean()
