@@ -77,7 +77,7 @@ class Transform_Python(BaseOperator):
         #Create a new df eith onlu numeric columns
         df_numeric = df.select_dtypes(include=['int64', 'float64'])
 
-        #Get the categorical columns tha are have encoded
+        #Encoded the categorical columns
         df_categorical = self.encoding(df)
 
         #Union the numeric and categorical columns
