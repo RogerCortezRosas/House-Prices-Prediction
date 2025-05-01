@@ -1,0 +1,5 @@
+Para solo obtener las librerias ocupadas en un requirements.txt 
+
+pip install pipreqs
+
+pipreqs /ruta/a/tu/proyecto --encoding=utf-8 --force
