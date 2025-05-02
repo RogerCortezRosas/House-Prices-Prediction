@@ -38,11 +38,14 @@ class model():
         #fill the missing values with zero
         self.df.fillna(0, inplace=True)
 
+
         #filter the columns that are not needed for the prediction
         engine = self.connection()
         df_WH = pd.read_sql_table('house_WareHouse', engine)
         columns_to_drop = self.df.columns.difference(df_WH.columns) #Get the columns that are not in the DataWarehouse
+        
         self.df.drop(columns=columns_to_drop, inplace=True)
+        self.df.drop(columns=['Id'], inplace=True) #Drop the Id column
 
 
         #Separate numerical columns
