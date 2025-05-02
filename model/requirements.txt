@@ -6,3 +6,5 @@ scikit_learn==1.2.2
 SQLAlchemy==1.4.54
 uvicorn==0.34.0
 python-multipart==0.0.20
+pymysql==1.0.2
+mysqlclient==2.2.1           # Cliente MySQL para Python

@@ -24,54 +24,73 @@ class model():
         try:
             #Make a prediction
             prediction = model.predict(df_transformed)
+
+            result  = int(prediction[0])
+
+            return result
+
         except Exception as e:
            
             raise Exception(f"Error making prediction: {e}")
 
-        result  = int(prediction[0])
-
-        return result
-
+        
     def Transform(self):
         """This method is used to transform the data"""
 
         #fill the missing values with zero
         self.df.fillna(0, inplace=True)
+        try:
+
+            #filter the columns that are not needed for the prediction
+            engine = self.connection()
+            df_WH = pd.read_sql_table('house_WareHouse', engine)
+            columns_to_drop = self.df.columns.difference(df_WH.columns) #Get the columns that are not in the DataWarehouse
+            
+            self.df.drop(columns=columns_to_drop, inplace=True)
+            self.df.drop(columns=['Id'], inplace=True) #Drop the Id column
 
 
-        #filter the columns that are not needed for the prediction
-        engine = self.connection()
-        df_WH = pd.read_sql_table('house_WareHouse', engine)
-        columns_to_drop = self.df.columns.difference(df_WH.columns) #Get the columns that are not in the DataWarehouse
+            #Separate numerical columns
+            df_numeric = self.df.select_dtypes(include=['int64', 'float64'])
+
+            # Encode categorical columns
+            df_categorical = self.encoding()
+
+            #concat the numerical and categorical columns
+            df_transformed = pd.concat([df_numeric, df_categorical], axis=1)
+
+            #Scale the data using RobustScaler
+            df_scaled = self.robustScaler(df_transformed)
+
+            return df_scaled
+
+        except Exception as e:
+            raise Exception(f"Error in Transform method: {e}")
+
         
-        self.df.drop(columns=columns_to_drop, inplace=True)
-        self.df.drop(columns=['Id'], inplace=True) #Drop the Id column
-
-
-        #Separate numerical columns
-        df_numeric = self.df.select_dtypes(include=['int64', 'float64'])
-
-        # Encode categorical columns
-        df_categorical = self.encoding()
-
-        #concat the numerical and categorical columns
-        df_transformed = pd.concat([df_numeric, df_categorical], axis=1)
-
-        #Scale the data using RobustScaler
-        df_scaled = self.robustScaler(df_transformed)
-
-        return df_scaled
 
 
 
 
     def robustScaler(self,dataframe):
         """This method scales the data using RobustScaler and helps to reduce the influence of outliers"""
-        Robustscaler = RobustScaler()
-        Numeric_scaled = Robustscaler.fit_transform(dataframe)
-        dataScaled = pd.DataFrame(Numeric_scaled,columns=dataframe.columns)
 
-        return dataScaled
+        try:
+            #Check if the dataframe is empty
+            if dataframe.empty:
+                raise ValueError("The dataframe is empty.")
+
+            #Check if the dataframe has only one column
+            if len(dataframe.columns) == 1:
+                raise ValueError("The dataframe has only one column.")
+            Robustscaler = RobustScaler()
+            Numeric_scaled = Robustscaler.fit_transform(dataframe)
+            dataScaled = pd.DataFrame(Numeric_scaled,columns=dataframe.columns)
+
+            return dataScaled
+        
+        except Exception as e:
+            raise Exception(f"Error in robustScaler method: {e}")
 
 
     def encoding(self):
@@ -130,25 +149,30 @@ class model():
         #Get the categorical columns
         categorical_columns = self.df.select_dtypes(include=['object'])
 
-        # Get de data in the DataWarehouse
-        engine = self.connection()
-        df_WH = pd.read_sql_table('house_WareHouse', engine)
+        try:
 
-        #Get encoded columns from function kfold_target_encoding
-        df_target_encoded = kfold_target_encoding(df_WH, categorical_columns)
+            # Get de data in the DataWarehouse
+            engine = self.connection()
+            df_WH = pd.read_sql_table('house_WareHouse', engine)
 
-        #Get encoded columns from function ordinal_encoding
-        df_ordinal_encoded = ordinal_encoding(categorical_columns)
+            #Get encoded columns from function kfold_target_encoding
+            df_target_encoded = kfold_target_encoding(df_WH, categorical_columns)
 
-        #Concat df_encoded and df_Ordinal_encoded
-        df_encoded = pd.concat([df_target_encoded, df_ordinal_encoded], axis=1)
+            #Get encoded columns from function ordinal_encoding
+            df_ordinal_encoded = ordinal_encoding(categorical_columns)
 
-        return df_encoded
+            #Concat df_encoded and df_Ordinal_encoded
+            df_encoded = pd.concat([df_target_encoded, df_ordinal_encoded], axis=1)
+
+            return df_encoded
+        
+        except Exception as e:
+            raise Exception(f"Error in encoding method: {e}")
 
     def connection(self):
         """This methos creates a connection with the  db with pandas"""
-        host = 'localhost'
-        port='3308'
+        host = 'mysql'
+        port='3306'
         user = 'house'
         password = 'house'
         db = 'house'
