@@ -39,7 +39,16 @@ services:
       airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com &&
       (airflow scheduler & airflow webserver)
       "
-
+  backend:
+    image: backend_house:appHouses
+    build:
+      context: ./model
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    container_name: back-container-house
+    volumes:
+      - ./model:/api_model
   mysql:
     image: mysql:8.0
     restart: unless-stopped
@@ -62,3 +71,7 @@ services:
 
 volumes:
   mysql_data:
+
+
+
+ 
