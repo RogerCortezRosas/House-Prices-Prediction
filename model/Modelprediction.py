@@ -157,8 +157,8 @@ class model():
             engine = create_engine(connection_string)
         
         except Exception as e:
-            self.log.error(f"Error creating connection: {e}")
-            raise
+            
+            raise Exception(f"Error creating connection: {e}")
 
         return engine
 
