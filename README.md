@@ -1,6 +1,6 @@
 # House-Prices-Prediction
 
-![imagen](images/casa.jpg)
+![imagen](images/houses.jpg)
 
 Este proyecto tiene como objetivo predecir los precios de casas utilizando técnicas de aprendizaje automático. Se emplea un conjunto de datos con características como  número de habitaciones, baños, tamaño del terreno y antigüedad. Aplicando el modelo de RandomForest para obtener predicciones precisas. Además, se realiza una exploración de datos y análisis estadístico previo para entender las variables más influyentes. Los resultados permiten estimar el valor de propiedades y apoyar decisiones de compra o venta.
 
