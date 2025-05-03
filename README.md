@@ -35,3 +35,21 @@ Este proyecto tiene como objetivo predecir los precios de casas utilizando técn
     <img src="images/PoweLogo.png" width="60" height="60" />
 
 </div>
+
+## Ejecucion  ⚙️
+
+Ejecuta los siguientes comandos para la ejecucion en tu entorno local
+
+  - git clone https://github.com/RogerCortezRosas/House-Prices-Prediction.git
+  
+  
+  Ejecuta el siguiente comando para construccion de contnedores
+  
+  - docker-compose up --build
+
+## Contacto
+
+- Autor : Rogelio Cortez Rosas
+- linkedin:https://www.linkedin.com/in/rogelio-cortez-rosas
+- email : rcortezrosas@gmail.com
+
