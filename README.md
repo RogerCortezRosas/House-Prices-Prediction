@@ -1,6 +1,6 @@
 # House-Prices-Prediction
 
-![imagen](images/house predicition.jpg)
+![imagen](images/housepredicition.jpg)
 
 Este proyecto tiene como objetivo predecir los precios de casas utilizando técnicas de aprendizaje automático. Se emplea un conjunto de datos con características como  número de habitaciones, baños, tamaño del terreno y antigüedad. Aplicando el modelo de RandomForest para obtener predicciones precisas. Además, se realiza una exploración de datos y análisis estadístico previo para entender las variables más influyentes. Los resultados permiten estimar el valor de propiedades y apoyar decisiones de compra o venta.
 
@@ -15,9 +15,9 @@ Este proyecto tiene como objetivo predecir los precios de casas utilizando técn
 - load : notebook para carga de data al DataLake.
 
 
-# Tecnologias
+## ⚒️ Tecnologias⚒️
 
-<h2 align="center">⚒️ Tecnologias⚒️</h2>
+
 <br/>
 <div align="center">
     <!-- Lenguajes de Programación -->
@@ -29,9 +29,9 @@ Este proyecto tiene como objetivo predecir los precios de casas utilizando técn
     <img src="https://skillicons.dev/icons?i=fastapi" />
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pandas/pandas-original-wordmark.svg" width="60" height="60" />
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/numpy/numpy-original-wordmark.svg" width="60" height="60" />
-    <img src="imagenes/airflowLogoM.png" width="60" height="60" />
-    <img src="imagenes/dockerLogo.png" width="60" height="60" />
-    <img src="imagenes/PlotlyLogo.png" width="60" height="60" />
-    <img src="imagenes/PoweLogo.png" width="60" height="60" />
+    <img src="images/airflowLogoM.png" width="60" height="60" />
+    <img src="images/dockerLogo.png" width="60" height="60" />
+    <img src="images/PlotlyLogo.png" width="60" height="60" />
+    <img src="images/PoweLogo.png" width="60" height="60" />
 
 </div>
