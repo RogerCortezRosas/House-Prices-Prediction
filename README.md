@@ -15,7 +15,7 @@ Este proyecto tiene como objetivo predecir los precios de casas utilizando técn
 - load : notebook para carga de data al DataLake.
 
 
-## ⚒️ Tecnologias⚒️
+## ⚒️ Tecnologias
 
 
 <br/>
