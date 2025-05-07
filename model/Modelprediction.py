@@ -201,10 +201,12 @@ class model():
         try:
             connection_string = f'mysql+pymysql://{user}:{password}@{host}:{port}/{db}'
             engine = create_engine(connection_string)
+            return engine
         
         except Exception as e:
+            logger.exception(f"Error creating connection: {e}")
             
             raise Exception(f"Error creating connection: {e}")
 
-        return engine
+        
 
