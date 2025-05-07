@@ -25,9 +25,12 @@ La tareas de Extraccion , Transformacion y Carga se realizan en una tarea con py
 
 ## API
 
-El Api cosnta de un metodo llamado /predict , el cual recibe de entrada un documento csv con la informacion de la casa
+El Api cosnta de un metodo llamado /predict , el cual recibe de entrada un documento csv con la informacion de la casa.
+Se realiza la validacion del formato y contenido recibido con el manejo de errores usando la mejores  practicas.
 
+## Modelo
 
+El modelo utilizado es RandomForestRegressor de la librerias de sckit-learn la cual es entrenada en el archivo Experimental_model.ipynb y se gurada el modelo en el archivo modelo.pkl.Posteriormente este archivo es cargado en Modelprediction.py para hacer la prediccion sin la necesidad de re-entreanr el modelo. Este codifgo cuenta con el manejo de errores adecuado para mostrar al usuario y ademas se almacena el error tecnico en los registros.
 
 ## ⚒️ Tecnologias⚒️
 
