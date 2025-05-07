@@ -146,26 +146,31 @@ class model():
         #Function to apply Ordinal Encoding 
 
         def ordinal_encoding(df):
+            
+            try:
+                #list of coliumns to encode
+                lista_OrEncoding = ["LotShape", "LandSlope", "ExterQual", "ExterCond", "BsmtQual", "BsmtCond", "BsmtExposure", "BsmtFinType1", "BsmtFinType2", "HeatingQC", "KitchenQual", "GarageFinish", "GarageQual", "GarageCond", ]
 
-            #list of coliumns to encode
-            lista_OrEncoding = ["LotShape", "LandSlope", "ExterQual", "ExterCond", "BsmtQual", "BsmtCond", "BsmtExposure", "BsmtFinType1", "BsmtFinType2", "HeatingQC", "KitchenQual", "GarageFinish", "GarageQual", "GarageCond", ]
+                #Create an instance of OrdinalEncoder
+                encoder = OrdinalEncoder()
 
-            #Create an instance of OrdinalEncoder
-            encoder = OrdinalEncoder()
+                #Make a copy with the columns to encode
+                df_encoded = df[lista_OrEncoding].copy()
 
-            #Make a copy with the columns to encode
-            df_encoded = df[lista_OrEncoding].copy()
+                #Apply Ordinal Encoding to the categorical columns
+                df_encoded[lista_OrEncoding] = encoder.fit_transform(df_encoded[lista_OrEncoding]) 
 
-            #Apply Ordinal Encoding to the categorical columns
-            df_encoded[lista_OrEncoding] = encoder.fit_transform(df_encoded[lista_OrEncoding]) 
-
-            return df_encoded
+                return df_encoded
+            except Exception as e:
+                logger.exception(f"Error in ordinal_encoding method: {e}")
+                raise Exception("Error in ordinal encoding")
         
 
-        #Get the categorical columns
-        categorical_columns = self.df.select_dtypes(include=['object'])
-
+        
         try:
+            #Get the categorical columns
+            categorical_columns = self.df.select_dtypes(include=['object'])
+
 
             # Get de data in the DataWarehouse
             engine = self.connection()
@@ -183,6 +188,7 @@ class model():
             return df_encoded
         
         except Exception as e:
+            logger.exception(f"Error in encoding method: {e}")
             raise Exception(f"Error in encoding method: {e}")
 
     def connection(self):
