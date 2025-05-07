@@ -6,13 +6,27 @@ Este proyecto tiene como objetivo predecir los precios de casas utilizando técn
 
 
 ## 📁 Estructura del Proyecto
-- dags/ : Esta carpeta contiene el cosigo fuente de los DAGs(Directed Acyclic Graphs) , para orquestar el flujo de trabajo . Las tareas del DAG permiten automatizar procesos como la extraccion ,transformcaion y carga(ETL)
+- dags/ : Esta carpeta contiene el cosigo fuente de los DAGs(Directed Acyclic Graphs) , para orquestar el flujo de trabajo . Las tareas del DAG permiten automatizar procesos como la extraccion ,transformacion y carga(ETL)
 - env/ : Entorno virtual para ejecucion  en el entorno local.
 - model/ : Contiene los codigos de el API, llamda al modelo de ML , creacion y experimentacion del modelo  , Analisis exploratorio , archivo docker y  librerias a importar.
 - scripts/ : Esta carpeta contiene el codigo para realizar el ETL , que es llamdao a traves de una tarea que conforman el DAG.
 - docker-compose.yaml : Archivo que contiene el codigo para crear los contenedores.
 - dockerfile : Archivo que contiene el codigo para crear la imagen de airflow y instalar dependencias.
 - load : notebook para carga de data al DataLake.
+
+## ETL
+
+La tareas de Extraccion , Transformacion y Carga se realizan en una tarea con python y pandas que consiste en lo siguiente:
+
+1.- Extraer: Se esxtrae la informacion de una base de datos Dat Lake donde la data aun no es transformada
+2.- Transformacion: En el proceso de transformacion se realiza la eliminacion de columnas quet tengan mas de 80% de nulos y ceros , ademas se realiza un encoding a las variables categoricas con tecnicas como kfold_target_encoding y ordinal_encoding .
+3.- Carga :  Una vez limpiado y transformado la data se carga a una nueva tabla que seria nuetro Data WareHouse.
+4.- Eliminacion : Cuando es transformada y cargada con exito la informacion se elimina los registros del DataLake
+
+## API
+
+El Api cosnta de un metodo llamado /predict , el cual recibe de entrada un documento csv con la informacion de la casa
+
 
 
 ## ⚒️ Tecnologias⚒️
