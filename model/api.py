@@ -55,3 +55,8 @@ async def predict(file: UploadFile = File(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+    finally:
+        # Ensure the temporary file is removed if it exists
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
