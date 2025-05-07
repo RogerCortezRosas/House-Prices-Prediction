@@ -18,10 +18,13 @@ Este proyecto tiene como objetivo predecir los precios de casas utilizando técn
 
 La tareas de Extraccion , Transformacion y Carga se realizan en una tarea con python y pandas que consiste en lo siguiente:
 
-1.- Extraer: Se esxtrae la informacion de una base de datos Dat Lake donde la data aun no es transformada
-2.- Transformacion: En el proceso de transformacion se realiza la eliminacion de columnas quet tengan mas de 80% de nulos y ceros , ademas se realiza un encoding a las variables categoricas con tecnicas como kfold_target_encoding y ordinal_encoding .
-3.- Carga :  Una vez limpiado y transformado la data se carga a una nueva tabla que seria nuetro Data WareHouse.
-4.- Eliminacion : Cuando es transformada y cargada con exito la informacion se elimina los registros del DataLake
+- Extraer: Se esxtrae la informacion de una base de datos Dat Lake donde la data aun no es transformada
+
+- Transformacion: En el proceso de transformacion se realiza la eliminacion de columnas quet tengan mas de 80% de nulos y ceros , ademas se realiza un encoding a las variables categoricas con tecnicas como kfold_target_encoding y ordinal_encoding .
+
+- Carga :  Una vez limpiado y transformado la data se carga a una nueva tabla que seria nuetro Data WareHouse.
+
+- Eliminacion : Cuando es transformada y cargada con exito la informacion se elimina los registros del DataLake
 
 ## API
 
