@@ -49,6 +49,9 @@ async def predict(file: UploadFile = File(...)):
         os.remove(temp_file_path)
 
         return JSONResponse(content={"prediction": prediction})
+    
+    except pd.errors.ParserError:
+        raise HTTPException(status_code=400, detail="Error parsing CSV file")
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

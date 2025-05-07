@@ -3,6 +3,15 @@ from sqlalchemy import create_engine
 import numpy as np
 from sklearn.preprocessing import RobustScaler , OrdinalEncoder
 import joblib
+import logging
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    filename='model_prediction.log',
+    filemode='a',
+    format='%(asctime)s - %(levelname)s - %(message)s' )
+logger = logging.getLogger(__name__)
 
 class model():
 
@@ -11,17 +20,17 @@ class model():
         pass
 
     def Prediction(self):
-        """This method is used to predict the house price using the Random Forest Regressor model.Charge the model previously trained"""
-        
-        #Load the model
-        model = joblib.load('model.pkl')
-
-        # Transform tht data using Transform function
-        df_transformed = self.Transform()
-
-        df_transformed.fillna(0, inplace=True)
-
+        """This method is use to predict the house price using the Random Forest Regressor model.Charge the model previously trained"""
         try:
+            #Load the model
+            model = joblib.load('model.pkl')
+
+            # Transform tht data using Transform function
+            df_transformed = self.Transform()
+
+            df_transformed.fillna(0, inplace=True)
+
+            
             #Make a prediction
             prediction = model.predict(df_transformed)
 
@@ -30,16 +39,19 @@ class model():
             return result
 
         except Exception as e:
+            logger.exception(f"Error during prediction: {e}")
            
-            raise Exception(f"Error making prediction: {e}")
+            raise Exception(" The prediction could not be completed.Try again later")
 
         
     def Transform(self):
         """This method is used to transform the data"""
 
-        #fill the missing values with zero
-        self.df.fillna(0, inplace=True)
+       
         try:
+
+            #fill the missing values with zero
+            self.df.fillna(0, inplace=True)
 
             #filter the columns that are not needed for the prediction
             engine = self.connection()
@@ -65,7 +77,8 @@ class model():
             return df_scaled
 
         except Exception as e:
-            raise Exception(f"Error in Transform method: {e}")
+            logger.exception(f"Error during transformation: {e}")
+            raise Exception("Error during transformation")
 
         
 
@@ -90,7 +103,8 @@ class model():
             return dataScaled
         
         except Exception as e:
-            raise Exception(f"Error in robustScaler method: {e}")
+            logger.exception(f"Error in robustScaler method: {e}")
+            raise Exception("Scaeling error")
 
 
     def encoding(self):
@@ -101,29 +115,31 @@ class model():
         #Function to applytarget Encoding to a categorical column
         def kfold_target_encoding (df_WH , df_to_Predict):
 
-            lista_tarEncoding = ["MSZoning", "Utilities", "Neighborhood", "Condition1", "Condition2", "BldgType", "HouseStyle", "RoofStyle", "RoofMatl", "Exterior1st", "Exterior2nd",  "Foundation", "BsmtFinType1", "Heating", "Electrical", "Functional", "GarageType", "SaleType", "SaleCondition"]
+            try:
 
-            df_new = df_to_Predict[lista_tarEncoding].copy()
-            for columna in lista_tarEncoding:
-                # Usar el mapeo calculado en el conjunto de entrenamiento
-                category_means = df_WH.groupby(columna)['SalePrice'].mean()
-                
-                # Aplicar el encoding a los nuevos datos
-                encoded_col_name = f"{columna}_encoded"
-                
-                df_new[encoded_col_name] = df_new[columna].map(category_means)
-                      #Drop the original categorical columns
-                      
-            df_new.drop(columns=lista_tarEncoding, inplace=True)
+                lista_tarEncoding = ["MSZoning", "Utilities", "Neighborhood", "Condition1", "Condition2", "BldgType", "HouseStyle", "RoofStyle", "RoofMatl", "Exterior1st", "Exterior2nd",  "Foundation", "BsmtFinType1", "Heating", "Electrical", "Functional", "GarageType", "SaleType", "SaleCondition"]
 
-            #Rename the encoded columns
+                df_new = df_to_Predict[lista_tarEncoding].copy()
+                for columna in lista_tarEncoding:
+                    # Usar el mapeo calculado en el conjunto de entrenamiento
+                    category_means = df_WH.groupby(columna)['SalePrice'].mean()
+                    
+                    # Aplicar el encoding a los nuevos datos
+                    encoded_col_name = f"{columna}_encoded"
+                    
+                    df_new[encoded_col_name] = df_new[columna].map(category_means)
+                        #Drop the original categorical columns
+                        
+                df_new.drop(columns=lista_tarEncoding, inplace=True)
 
-            df_new.columns = [col.replace('_encoded', '') for col in df_new.columns]
-    
+                #Rename the encoded columns
 
-    
-            
-            return df_new
+                df_new.columns = [col.replace('_encoded', '') for col in df_new.columns]
+        
+                return df_new
+            except Exception as e:
+                logger.exception(f"Error in kfold_target_encoding method: {e}")
+                raise Exception("Error in target encoding")
             
             
         
